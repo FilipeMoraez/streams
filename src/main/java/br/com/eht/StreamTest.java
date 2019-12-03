@@ -2,6 +2,7 @@ package br.com.eht;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,9 +21,11 @@ public class StreamTest {
         // Contadores com condições de lista
         contador(false);
         // True/false para quem match na lista
-        match(true);
+        match(false);
         // percorre a lista de clientes e adiciona em uma outra lista todos os endereços de todos clientes
-        mapSubItens(true);
+        mapSubItens(false);
+
+        calculos(true);
     }
 
     private static  void conversao(boolean out){
@@ -66,10 +69,19 @@ public class StreamTest {
         String sexta = array.stream().filter(e -> e.startsWith("Sext")).findFirst().get();
         String naoEncontra = array.stream().filter(e -> e.startsWith("ASDSD")).findFirst().orElse(null);
 
+
+
         if(out) print("Filtrado quem começa com Q :" + filtradoQ);
         if(out) print("Filtrado quem é igual com Terceiro :" + filtradoTerceiro.collect(Collectors.toList()));
         if(out) print("O primeiro que começa com 'sext' :" + sexta);
         if(out) print("O primeiro que começa com 'ASDSD' :" + naoEncontra);
+
+        List<Cliente> clientes = new ArrayList<>();
+        populaClientesEnderecos(clientes);
+        if(out) print("Lista de clientes :" + clientes);
+        List<Cliente> cli = clientes.stream().filter(e -> e.getEnderecos().stream().anyMatch(y -> y.getNumero().equals("410"))).collect(Collectors.toList());
+        if(out) print("Lista filtrada quando cliente tem endereco com o numero 410 " + cli);
+
     }
 
     private static void contador(boolean out) {
@@ -159,6 +171,30 @@ public class StreamTest {
                         )
                 )
         );
+    }
+
+    public static void calculos(boolean out){
+        if(out) print("Calculos");
+        List<Aluno> listaAlunos = Arrays.asList(
+                new Aluno("Filipe", 26),
+                new Aluno("Matheus", 22),
+                new Aluno("Thiago", 28),
+                new Aluno("Lucas", 23)
+        );
+
+        if(out) print("Lista de alunos :" + listaAlunos);
+
+        Double media = listaAlunos.stream().mapToInt(e -> e.getIdade()).average().getAsDouble();
+        Integer total = listaAlunos.stream().mapToInt(e -> e.getIdade()).sum();
+
+        if(out) print("Média de idades dos alunos :" + media);
+        if(out) print("Total somado das idades: " + total);
+
+        if(out) print("Lista de alunos não ordenado :" + listaAlunos);
+        List<Aluno> ordenada = listaAlunos.stream().sorted(Comparator.comparingInt(Aluno::getIdade)).collect(Collectors.toList());
+        if(out) print("Lista de alunos ordenado :" + ordenada);
+
+        
     }
 
 
