@@ -1,5 +1,7 @@
 package br.com.eht;
 
+import br.com.eht.funcional.Process;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -24,11 +26,14 @@ public class StreamTest {
         match(false);
         // percorre a lista de clientes e adiciona em uma outra lista todos os endereços de todos clientes
         mapSubItens(false);
-
-        calculos(true);
+        // soma todas idades / média das idade / lista ordenada
+        calculos(false);
+        // Ultilizando inferface funcional que foi criada no projeto
+        aplicandoInterfaceFuncional(true);
     }
 
     private static  void conversao(boolean out){
+        if(out) print("Conversão de array / stream, exemplos: ");
         String[] arr = new String[]{"a1", "b2", "c3"};
         if(out) print(arr);
         Stream<String> stream = Arrays.stream(arr);
@@ -40,6 +45,7 @@ public class StreamTest {
         if (out) streamOf.forEach(StreamTest::print);
     }
     private static void processamentoParalelo(boolean out){
+        if(out) print("Processamento em paralelo, exemplos: ");
         List<String> array = Arrays.asList("Primeiro", "Segundo", "Terceiro", "Quarto", "Quinto", "Sexto");
         if(out) print(array);
         if(out) System.out.print(array);
@@ -58,6 +64,7 @@ public class StreamTest {
     }
 
     private static void filtro(boolean out){
+        if(out) print("Filters exemplos: ");
         List<String> array = Arrays.asList("Primeiro", "Segundo", "Terceiro", "Quarto", "Quinto", "Sexto", "Sétimo", "Oitavo");
         if(out) print("Lista: "+array);
 
@@ -77,7 +84,7 @@ public class StreamTest {
         if(out) print("O primeiro que começa com 'ASDSD' :" + naoEncontra);
 
         List<Cliente> clientes = new ArrayList<>();
-        populaClientesEnderecos(clientes);
+        Cliente.populaClientesEnderecos(clientes);
         if(out) print("Lista de clientes :" + clientes);
         List<Cliente> cli = clientes.stream().filter(e -> e.getEnderecos().stream().anyMatch(y -> y.getNumero().equals("410"))).collect(Collectors.toList());
         if(out) print("Lista filtrada quando cliente tem endereco com o numero 410 " + cli);
@@ -85,6 +92,7 @@ public class StreamTest {
     }
 
     private static void contador(boolean out) {
+        if(out) print("Contadores exemplos: ");
         List<String> array = Arrays.asList("Primeiro", "Segundo", "Terceiro", "Quarto", "Quinto", "Sexto", "Sétimo", "Oitavo");
         if(out) print("Lista: "+array);
 
@@ -96,6 +104,7 @@ public class StreamTest {
         if (out) print("Começa com I: "+ comecaComI );
     }
     private static void match(boolean out){
+        if(out) print("Match nas listas, exemplos : ");
         List<String> array = Arrays.asList("Primeiro_", "Segundo_", "Terceiro_", "Quarto_", "Quinto_", "Sexto_", "Sétimo_", "Oitavo_");
         if(out) print("Lista: "+array);
 
@@ -117,8 +126,9 @@ public class StreamTest {
 
     }
     private static void mapSubItens(boolean out){
+        if(out) print("Iterando sublistas com flatMap exemplos: ");
         List<Cliente> clientes = new ArrayList<>();
-        populaClientesEnderecos(clientes);
+        Cliente.populaClientesEnderecos(clientes);
         if(out) print("Lista de clientes :" + clientes);
 
         List<Endereco> todosEnderecos = clientes.stream().flatMap(cliente -> cliente.getEnderecos().stream()).collect(Collectors.toList());
@@ -129,53 +139,9 @@ public class StreamTest {
     }
 
 
-
-    private static void populaClientesEnderecos(List<Cliente> clientes) {
-        clientes.add(
-                new Cliente("1003",
-                        Arrays.asList(
-                                new Endereco("Nicolas Cage", "410")
-                        )
-                )
-        );
-        clientes.add(
-                new Cliente("1002",
-                        Arrays.asList(
-                                new Endereco("Padre Oliveiros", "1"),
-                                new Endereco("Castelo Branco", "99"),
-                                new Endereco("Tavares", "9")
-                        )
-                )
-        );
-        clientes.add(
-                new Cliente("1001",
-                        Arrays.asList(
-                                new Endereco("Jose Padilha", "2")
-                        )
-                )
-        );
-        clientes.add(
-                new Cliente("9991",
-                        Arrays.asList(
-                                new Endereco("Nicolau Maevisky", "43"),
-                                new Endereco("Nicolai Maestro", "1")
-                        )
-                )
-        );
-        clientes.add(
-                new Cliente("2000",
-                        Arrays.asList(
-                                new Endereco("Nicolau Maevisky", "410"),
-                                new Endereco("Nicolau Maevisky", "410"),
-                                new Endereco("Nicolau Maevisky", "410")
-                        )
-                )
-        );
-    }
-
-    public static void calculos(boolean out){
-        if(out) print("Calculos");
-        List<Aluno> listaAlunos = Arrays.asList(
+    private static void calculos(boolean out){
+        if(out) print("Calculos exemplos: ");
+        List<Aluno> listaAlunos =   Arrays.asList(
                 new Aluno("Filipe", 26),
                 new Aluno("Matheus", 22),
                 new Aluno("Thiago", 28),
@@ -193,16 +159,23 @@ public class StreamTest {
         if(out) print("Lista de alunos não ordenado :" + listaAlunos);
         List<Aluno> ordenada = listaAlunos.stream().sorted(Comparator.comparingInt(Aluno::getIdade)).collect(Collectors.toList());
         if(out) print("Lista de alunos ordenado :" + ordenada);
-
-        
     }
 
+    private static void aplicandoInterfaceFuncional(boolean out){
+        if(out) print("Interface funcional exemplos: ");
+        if (out) printProcess(e -> e + "Teste", "Começo um ");
+        if (out) printProcess(e -> e.toLowerCase(), "ToP ");
+
+    }
+
+    private static void printProcess(Process p, String x){
+        print(p.run(x));
+;    }
 
     public static void print(Object any){
         System.out.println(any);
     }
 }
-
 
 
 
