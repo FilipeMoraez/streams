@@ -1,5 +1,6 @@
 package br.com.eht;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,8 @@ public class StreamTest {
         contador(false);
         // True/false para quem match na lista
         match(true);
+        // percorre a lista de clientes e adiciona em uma outra lista todos os endereços de todos clientes
+        mapSubItens(true);
     }
 
     private static  void conversao(boolean out){
@@ -81,20 +84,87 @@ public class StreamTest {
         if (out) print("Começa com I: "+ comecaComI );
     }
     private static void match(boolean out){
+        List<String> array = Arrays.asList("Primeiro_", "Segundo_", "Terceiro_", "Quarto_", "Quinto_", "Sexto_", "Sétimo_", "Oitavo_");
+        if(out) print("Lista: "+array);
+
+        boolean existeUltimo = array.stream().anyMatch(e -> e.equals("Ultimo"));
+        boolean existePrimeiro = array.stream().anyMatch(e -> e.equals("Primeiro"));
+        boolean existeALgumComUndo = array.stream().anyMatch(e -> e.indexOf("undo")>=0);
+
+        boolean todosComecamComP = array.stream().allMatch(e -> e.equals("P"));
+        boolean todosTerminamComUnder = array.stream().allMatch(e -> e.endsWith("_"));
 
 
+        if(out) print("Existe a string 'Ultimo' : " + existeUltimo);
+        if(out) print("Existe a string 'Primeiro' : " + existePrimeiro);
+        if(out) print("Existe a algum com  'undo' na string : " + existeALgumComUndo);
+
+        if(out) print("Todos começam com p : " + todosComecamComP);
+        if(out) print("Todos terminam com _  : " + todosTerminamComUnder);
+
+
+    }
+    private static void mapSubItens(boolean out){
+        List<Cliente> clientes = new ArrayList<>();
+        populaClientesEnderecos(clientes);
+        if(out) print("Lista de clientes :" + clientes);
+
+        List<Endereco> todosEnderecos = clientes.stream().flatMap(cliente -> cliente.getEnderecos().stream()).collect(Collectors.toList());
+        List<Endereco> todosEnderecosComN = clientes.stream().flatMap(cliente -> cliente.getEnderecos().stream().filter(e -> e.getRua().startsWith("N"))).collect(Collectors.toList());
+
+        if(out) print(todosEnderecos);
+        if(out) print(todosEnderecosComN);
     }
 
 
 
+    private static void populaClientesEnderecos(List<Cliente> clientes) {
+        clientes.add(
+                new Cliente("1003",
+                        Arrays.asList(
+                                new Endereco("Nicolas Cage", "410")
+                        )
+                )
+        );
+        clientes.add(
+                new Cliente("1002",
+                        Arrays.asList(
+                                new Endereco("Padre Oliveiros", "1"),
+                                new Endereco("Castelo Branco", "99"),
+                                new Endereco("Tavares", "9")
+                        )
+                )
+        );
+        clientes.add(
+                new Cliente("1001",
+                        Arrays.asList(
+                                new Endereco("Jose Padilha", "2")
+                        )
+                )
+        );
+        clientes.add(
+                new Cliente("9991",
+                        Arrays.asList(
+                                new Endereco("Nicolau Maevisky", "43"),
+                                new Endereco("Nicolai Maestro", "1")
+                        )
+                )
+        );
+        clientes.add(
+                new Cliente("2000",
+                        Arrays.asList(
+                                new Endereco("Nicolau Maevisky", "410"),
+                                new Endereco("Nicolau Maevisky", "410"),
+                                new Endereco("Nicolau Maevisky", "410")
+                        )
+                )
+        );
+    }
 
-    private static void print(Object any){
+
+    public static void print(Object any){
         System.out.println(any);
     }
-
-
-
-
 }
 
 

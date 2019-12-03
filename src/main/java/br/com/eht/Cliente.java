@@ -30,4 +30,12 @@ public class Cliente{
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "customerId='" + customerId + '\'' +
+                ", enderecos=" + enderecos +
+                '}';
+    }
 }
